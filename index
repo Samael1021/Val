@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hey baby girl. Will You Be My Valentine?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+        height: 100svh;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        overflow: hidden;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 360px;
+        text-align: center;
+        background: white;
+        padding: 32px 20px;
+        border-radius: 24px;
+        box-shadow: 0 12px 25px rgba(0,0,0,0.18);
+        position: relative;
+        overflow: hidden;
+    }
+
+    h1 {
+        color: #e91e63;
+        font-size: 1.6rem;
+        margin-bottom: 24px;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        position: relative;
+        height: 80px;
+    }
+
+    button {
+        min-width: 120px;
+        min-height: 48px;
+        font-size: 1rem;
+        padding: 12px 22px;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: transform 0.25s ease;
+        touch-action: manipulation;
+    }
+
+    #yesBtn {
+        background: #e91e63;
+        color: white;
+        z-index: 2;
+        transform-origin: center;
+    }
+
+    #noBtn {
+        background: #e0e0e0;
+        color: #333;
+        position: absolute;
+        right: 0;
+        z-index: 1;
+    }
+
+    .celebration {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .confetti, .heart {
+        position: absolute;
+        animation: fall linear forwards;
+    }
+
+    .confetti {
+        width: 8px;
+        height: 14px;
+    }
+
+    .heart {
+        font-size: 20px;
+        color: #e91e63;
+    }
+
+    @keyframes fall {
+        to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    .final {
+        display: none;
+        animation: fadeIn 1.5s ease forwards;
+    }
+
+    .final img {
+        width: 100%;
+        border-radius: 20px;
+        margin-top: 20px;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .final p {
+        font-size: 1.2rem;
+        color: #e91e63;
+        margin-top: 16px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="celebration" id="celebration"></div>
+
+<div class="container">
+    <h1>Hey baby girl. Will you be my Valentine? 💖</h1>
+
+    <div class="buttons" id="buttons">
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
+    </div>
+
+    <div class="final" id="final">
+        <img src="final.jpg" alt="Us 💕">
+        <p>Forever starts now ❤️</p>
+    </div>
+</div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const celebration = document.getElementById("celebration");
+const buttons = document.getElementById("buttons");
+const final = document.getElementById("final");
+
+let attempts = 0;
+let yesScale = 1;
+const MAX_SCALE = 1.6;
+
+// Function to move No and escalate
+function moveNoButton() {
+    attempts++;
+
+    // Move No button
+    const padding = 16;
+    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+    noBtn.style.position = "fixed";
+    noBtn.style.left = Math.random() * maxX + "px";
+    noBtn.style.top = Math.random() * maxY + "px";
+
+    // Grow Yes button
+    yesScale = Math.min(MAX_SCALE, yesScale + 0.08);
+    yesBtn.style.transform = `scale(${yesScale})`;
+
+    // Playful escalation messages
+    if (attempts === 2) noBtn.textContent = "Hawwwww";
+    else if (attempts === 4) noBtn.textContent = "Mari intha chulakana ayipoyana.";
+    else if (attempts === 6) noBtn.textContent = "Papam emm ayipotadu ani minimum consideration leda";
+    else if (attempts === 8) noBtn.textContent = "Hawwwww malli no ah 😅";
+    else if (attempts === 10) noBtn.textContent = "I hear you but maybe Yes? 💖";
+}
+
+// Add event listeners to cover desktop & mobile
+["mouseenter", "touchstart", "click"].forEach(evt => {
+    noBtn.addEventListener(evt, moveNoButton);
+});
+
+// When Yes is clicked
+yesBtn.addEventListener("click", () => {
+    buttons.style.display = "none";
+    launchCelebration();
+
+    setTimeout(() => {
+        final.style.display = "block";
+    }, 3500);
+});
+
+// Launch confetti and hearts
+function launchCelebration() {
+    for (let i = 0; i < 80; i++) {
+        createConfetti();
+        if (i % 2 === 0) createHeart();
+    }
+}
+
+// Confetti
+function createConfetti() {
+    const el = document.createElement("div");
+    el.className = "confetti";
+    el.style.left = Math.random() * 100 + "vw";
+    el.style.background = `hsl(${Math.random()*360}, 80%, 60%)`;
+    el.style.animationDuration = 2 + Math.random() * 2 + "s";
+    celebration.appendChild(el);
+    setTimeout(() => el.remove(), 4000);
+}
+
+// Hearts
+function createHeart() {
+    const el = document.createElement("div");
+    el.className = "heart";
+    el.textContent = "💖";
+    el.style.left = Math.random() * 100 + "vw";
+    el.style.animationDuration = 3 + Math.random() * 2 + "s";
+    celebration.appendChild(el);
+    setTimeout(() => el.remove(), 5000);
+}
+</script>
+
+</body>
+</html>
